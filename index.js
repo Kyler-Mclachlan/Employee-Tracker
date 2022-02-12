@@ -134,75 +134,6 @@ var getEmployeetestmyversion = () => {
 };
 
 //Inquirer 
-function userInput(){
-    var staffSize = 0;
-    console.log(`
-   ||=======================================================================||
-     Welcome!  
-   ||=======================================================================||
-    `);
-    return inquirer.prompt([
-      {
-        type: 'input',
-        name: 'name',
-        message: "Please enter the team manager's name:",
-        validate: nameInput => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter your team manager's name!")
-            return false;
-          }
-        }
-      },
-      {
-        type: 'input',
-        name: 'id',
-        message: "Please enter the manager's ID:",
-        validate: idInput => {
-          if (idInput) {
-            return true;
-          } else {
-            console.log("Please enter the manager's ID!"
-            )
-            return false;
-          }
-        }
-      },
-      {
-        type: 'input',
-        name: 'email',
-        message: "Please enter your manager's email address:",
-        validate: emailInput => {
-          if (emailInput) {
-            return true;
-          } else {
-            console.log("Please enter your manager's email address!")
-            return false;
-          }
-        }
-      },
-      {
-        type: 'input',
-        name: 'officeNumber',
-        message: "Please enter your manager's office number:",
-        validate: officeNumberInput => {
-          if (officeNumberInput) {
-            return true;
-          } else {
-            console.log("Please enter your manager's office number!")
-            return false;
-          }
-        }
-      },
-    ])
-    .then (({name, id, email, officeNumber}) => {
-        staff.push(new Manager(name, id, email, officeNumber));
-        console.log(name);
-        restOfStaff();
-      })
-};
-
 
 const userMenu = () => {
     return inquirer.prompt([
@@ -226,30 +157,29 @@ const userMenu = () => {
 
 
 const fuctionCycler = async () => {
-await userMenu()
-  .then(answers => {
-    if (answers.employeeType ===  "View All Departments"){
+    (answers => {
+    if (answers.promptAnswer ===  "View All Departments"){
         getDepartment();
     }
-    if (answers.employeeType ===  "View All Roles"){
+    if (answers.promptAnswer ===  "View All Roles"){
         getRoles();
     }
-    if (answers.employeeType ===  "View All Employees"){
+    if (answers.promptAnswer ===  "View All Employees"){
         getEmployee();
     }
-    if (answers.employeeType ===  "Add A Department"){
+    if (answers.promptAnswer ===  "Add A Department"){
         addDepartment();
     }
-    if (answers.employeeType ===  "Add A Role"){
+    if (answers.promptAnswer ===  "Add A Role"){
         addRole();
     }
-    if (answers.employeeType ===  "Add An Employee"){
+    if (answers.promptAnswer ===  "Add An Employee"){
         addEmployee();
     }
-    if (answers.employeeType ===  "Update an Employee Role"){
+    if (answers.promptAnswer ===  "Update an Employee Role"){
         UpdateEmployee();
     }
-    if (answers.employeeType ===  "Done/Exit") {
+    if (answers.promptAnswer ===  "Done/Exit") {
         exitProgram();
     }
   })
