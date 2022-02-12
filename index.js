@@ -1,18 +1,8 @@
 const mysql = require('mysql2/promise')
 const cTable = require('console.table');
 const inquirer = require('inquirer');
+const db = require('./config/connection');
 
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        //
-        user: 'root',
-        // password
-        password: 'Loseyourselftodance10101',
-        database: 'workforce'
-    },
-    console.log('connected to Workforce database')
-);
 
 
 // DISPLAY SQL queries
@@ -41,6 +31,9 @@ var getDepartment = () => {
         function(err, results, fields) {
             console.table(results);
             console.log('departments');
+            if (err){
+                console.log(err)
+            };
         }
     )
 };
@@ -212,15 +205,19 @@ function userInput(){
 
 
 const userMenu = () => {
-    const questions = [
+    return inquirer.prompt([
       {
         type: "list",
         name: "promptAnswer",
         message: "What would you like to do?",
         choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update an Employee Role", "Done/Exit"],
       }
-    ];
-    return inquirer.prompt(questions);
+    ])
+    .then(({promptAnswer}) =>{
+        console.log(promptAnswer);
+        fuctionCycler();
+    })
+    
   };
 
   const exitProgram = () =>{
@@ -229,7 +226,7 @@ const userMenu = () => {
 
 
 const fuctionCycler = async () => {
-    await userMenu()
+await userMenu()
   .then(answers => {
     if (answers.employeeType ===  "View All Departments"){
         getDepartment();
@@ -292,4 +289,4 @@ var updateRoleTestData = {
 // UpdateEmployee(updateRoleTestData);
 // getEmployee();
 
-fuctionCycler();
+userMenu();
