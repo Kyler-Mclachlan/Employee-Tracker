@@ -54,6 +54,8 @@ var getRoles = () => {
     )
 };
 
+// TEST DATA
+
 var employeeTestData = {
     first_name : 'Kyler',
     last_name : 'Mclachlan',
@@ -61,12 +63,22 @@ var employeeTestData = {
     manager_id : 2
 }
 
-var RoleTestData = {
-    first_name : 'Kyler',
-    last_name : 'Mclachlan',
-    role_id : 2,
-    manager_id : 2
+var roleTestData = {
+    title: 'Astroid Farmer',
+    salary : '50000',
+    department_id : 2
 }
+
+
+var departmentTestData = {
+    name: 'Lab of Secrets'
+}
+
+var updateRoleTestData = {
+    role_id: 4,
+    first_name: 'Kyler'
+}
+
 
 
 // ADD SQL queries
@@ -82,8 +94,8 @@ var addEmployee = (data) => {
 )};
 
 var addRole = (data) => {
-    const sql = 'INSERT INTO roles (title, salary, department_id VALUES (?,?,?)';
-    const params = [data.first_name, data.last_name, data.role_id, data.manager_id];
+    const sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)';
+    const params = [data.title, data.salary, data.department_id];
     db.query(sql, params, (err, results) => {
         console.table(results);
         if (err){
@@ -92,6 +104,31 @@ var addRole = (data) => {
     }
 )};
 
+var addDepartment = (data) => {
+    const sql = 'INSERT INTO department (name) VALUES (?)';
+    const params = [data.name];
+    db.query(sql, params, (err, results) => {
+        console.table(results);
+        if (err){
+            console.log(err);
+        }
+    }
+)};
+
+// Update SQL queries 
+var UpdateEmployee = (data) => {
+    const sql = `UPDATE employees SET role_id = ?
+                WHERE first_name = ?`
+    const params = [data.role_id, data.first_name];
+    db.query(sql, params, (err, results) => {
+        console.table(results);
+        if (err){
+            console.log(err);
+        }
+    }
+)};
+
+// TEST functions
 var getEmployeetest = () => {
     db.query(
         // Still need to do manager name
@@ -126,5 +163,11 @@ var getEmployeetestmyversion = () => {
 
 // getEmployeetestmyversion();
 // getEmployeetest();
-addEmployee(test);
+addEmployee(employeeTestData);
+getEmployee();
+addRole(roleTestData);
+getRoles();
+addDepartment(departmentTestData);
+getDepartment();
+UpdateEmployee(updateRoleTestData);
 getEmployee();

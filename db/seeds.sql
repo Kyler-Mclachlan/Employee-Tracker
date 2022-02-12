@@ -7,10 +7,10 @@ VALUES
 
 INSERT INTO roles (title, salary, department_id)
 VALUES
-('Sr Hyper-Materialist', 500000, 1),
-('Sr Water Farmer', 300000, 2),
-('Sr Gravity Warper', 100000, 3),
-('Sr Goo Analyst', 200000, 4),
+('Senior Hyper-Materialist', 500000, 1),
+('Senior Water Farmer', 300000, 2),
+('Senior Gravity Warper', 100000, 3),
+('Senior Goo Analyst', 200000, 4),
 ('Hyper-Materialist', 500000, 1),
 ('Water Farmer', 300000, 2),
 ('Gravity Warper', 100000, 3),
