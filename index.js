@@ -4,9 +4,37 @@ const inquirer = require('inquirer');
 const db = require('./config/connection');
 
 
+addEmployeeEntry = () => { 
+    return inquirer.prompt([
+    {
+      type: "input",
+      name: "employeeFirstName",
+      message: "What is your employees First name?",
+    },
+    {
+        type: "input",
+        name: "employeeLastName",
+        message: "What is your employees Last name?",
+    },
+    {
+        type: "input",
+        name: "employeeRole",
+        message: "What is your employees Role ID?",
+    },
+    {
+        type: "input",
+        name: "employeeManager",
+        message: "What is your employees Manager ID?",
+    }
+  ])
+  .then (({employeeFirstName, employeeLastName, employeeRole, employeeManager}) => {
+    const newEmployeedata = {employeeFirstName, employeeLastName, employeeRole, employeeManager};
+    addEmployee(newEmployeedata)
+  })
+}
 
 // DISPLAY SQL queries
-var getEmployee = () => {
+var getEmployee= async () => {
     db.query(
         // Still need to do manager name
     `SELECT employees.id AS Employee_ID , employees.first_name AS First_Name, employees.last_name AS Last_Name, roles.title as Title, department.name AS Department_name, roles.salary AS Salary, employees.manager_id AS Manager_id
@@ -22,9 +50,10 @@ var getEmployee = () => {
             }
         }
     )
+    userMenu();
 };
 
-var getDepartment = () => {
+var getDepartment = async () => {
     db.query(
     `SELECT id AS Department_ID, name as Department_Name
      FROM department`, 
@@ -36,9 +65,10 @@ var getDepartment = () => {
             };
         }
     )
+    userMenu();
 };
 
-var getRoles = () => {
+var getRoles = async () => {
     db.query(
         `SELECT roles.id AS Role_ID , roles.title as Title, roles.salary AS Salary, department.name AS Department_name
         FROM roles
@@ -47,6 +77,7 @@ var getRoles = () => {
             console.table(results);
         }
     )
+    userMenu();
 };
 
 
@@ -62,7 +93,8 @@ var addEmployee = (data) => {
         if (err){
             console.log(err);
         }
-    }
+    },
+    userMenu()
 )};
 
 var addRole = (data) => {
@@ -84,7 +116,8 @@ var addDepartment = (data) => {
         if (err){
             console.log(err);
         }
-    }
+    },
+    userMenu()
 )};
 
 // Update SQL queries 
@@ -97,7 +130,8 @@ var UpdateEmployee = (data) => {
         if (err){
             console.log(err);
         }
-    }
+    },
+    userMenu()
 )};
 
 // TEST functions
@@ -135,7 +169,11 @@ var getEmployeetestmyversion = () => {
 
 //Inquirer 
 
-const userMenu = () => {
+const exitProgram = () =>{
+    console.log('Bye! :D');
+}
+
+const userMenu = async () => {
     return inquirer.prompt([
       {
         type: "list",
@@ -144,20 +182,7 @@ const userMenu = () => {
         choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update an Employee Role", "Done/Exit"],
       }
     ])
-    .then(({promptAnswer}) =>{
-        console.log(promptAnswer);
-        fuctionCycler();
-    })
-    
-  };
-
-  const exitProgram = () =>{
-    console.log('Bye! :D');
-}
-
-
-const fuctionCycler = async () => {
-    (answers => {
+    .then(answers => {
     if (answers.promptAnswer ===  "View All Departments"){
         getDepartment();
     }
@@ -174,7 +199,7 @@ const fuctionCycler = async () => {
         addRole();
     }
     if (answers.promptAnswer ===  "Add An Employee"){
-        addEmployee();
+        addEmployeeEntry();
     }
     if (answers.promptAnswer ===  "Update an Employee Role"){
         UpdateEmployee();
@@ -183,7 +208,10 @@ const fuctionCycler = async () => {
         exitProgram();
     }
   })
-  }  
+  };
+
+
+
 
 
   // TEST DATA
