@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const db = require('./config/connection');
 
 
-addEmployeeEntry = () => { 
+addEmployeeEntry = async () => { 
     return inquirer.prompt([
     {
       type: "input",
