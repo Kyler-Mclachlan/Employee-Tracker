@@ -4,8 +4,8 @@ const inquirer = require('inquirer');
 const db = require('./config/connection');
 
 
+// Prompts for collecting data
 addEmployeeEntry = async () => { 
-    console.log("running add employee entry")
     return inquirer.prompt([
     {
       type: "input",
@@ -35,7 +35,6 @@ addEmployeeEntry = async () => {
 }
 
 addDepartmentEntry = async () => { 
-    console.log("running add employee entry")
     return inquirer.prompt([
     {
       type: "input",
@@ -46,6 +45,52 @@ addDepartmentEntry = async () => {
   .then (({departmentName}) => {
     const newDepartmentdata = { name : departmentName};
     addDepartment(newDepartmentdata)
+  })
+}
+
+addRoleEntry = async () => { 
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "roleTitle",
+            message: "What is the title of the role?",
+          },
+          {
+              type: "input",
+              name: "roleSalary",
+              message: "What is the role's salary?",
+          },
+          {
+              type: "input",
+              name: "roleDepartment",
+              message: "What department does the role belong to?",
+          }
+  ])
+  .then (({roleTitle, roleSalary, roleDepartment}) => {
+    const newRoleData = { title : roleTitle, salary: roleSalary, department_id : roleDepartment };
+    addRole(newRoleData)
+  })
+}
+
+UpdateRoleEntry = async () => { 
+    const employees = await getEmployee();
+    console.log(employees);
+    return inquirer.prompt([
+        {
+            type: "list",
+            name: "originalRole",
+            message: "What is the name of the employee whose role is changing?",
+            choices: [employees],
+          },
+          {
+              type: "input",
+              name: "newRole",
+              message: "What is the id of the new role",
+          }
+  ])
+  .then (({roleTitle, roleSalary, roleDepartment}) => {
+    const newRoleData = { title : roleTitle, salary: roleSalary, department_id : roleDepartment };
+    addRole(newRoleData)
   })
 }
 
@@ -101,7 +146,7 @@ var getRoles = async () => {
 
 
 // ADD SQL queries
-var addEmployee = (data) => {
+var addEmployee = async (data) => {
     const sql = 'INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)';
     const params = [data.first_name, data.last_name, data.role_id, data.manager_id];
     db.query(sql, params, (err, results) => {
@@ -113,7 +158,7 @@ var addEmployee = (data) => {
     userMenu()
 )};
 
-var addRole = (data) => {
+var addRole = async  (data) => {
     const sql = 'INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)';
     const params = [data.title, data.salary, data.department_id];
     db.query(sql, params, (err, results) => {
@@ -121,10 +166,11 @@ var addRole = (data) => {
         if (err){
             console.log(err);
         }
-    }
+    },
+    userMenu()
 )};
 
-var addDepartment = (data) => {
+var addDepartment = async (data) => {
     const sql = 'INSERT INTO department (name) VALUES (?)';
     const params = [data.name];
     db.query(sql, params, (err, results) => {
@@ -212,13 +258,13 @@ const userMenu = async () => {
         addDepartmentEntry();
     }
     if (answers.promptAnswer ===  "Add A Role"){
-        addRole();
+        addRoleEntry();
     }
     if (answers.promptAnswer ===  "Add An Employee"){
         addEmployeeEntry();
     }
     if (answers.promptAnswer ===  "Update an Employee Role"){
-        UpdateEmployee();
+        UpdateRoleEntry();
     }
     if (answers.promptAnswer ===  "Done/Exit") {
         exitProgram();
