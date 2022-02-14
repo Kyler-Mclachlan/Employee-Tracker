@@ -5,6 +5,7 @@ const db = require('./config/connection');
 
 
 addEmployeeEntry = async () => { 
+    console.log("running add employee entry")
     return inquirer.prompt([
     {
       type: "input",
@@ -28,8 +29,23 @@ addEmployeeEntry = async () => {
     }
   ])
   .then (({employeeFirstName, employeeLastName, employeeRole, employeeManager}) => {
-    const newEmployeedata = {employeeFirstName, employeeLastName, employeeRole, employeeManager};
+    const newEmployeedata = { first_name : employeeFirstName,  last_name : employeeLastName, role_id: employeeRole, manager_id: employeeManager};
     addEmployee(newEmployeedata)
+  })
+}
+
+addDepartmentEntry = async () => { 
+    console.log("running add employee entry")
+    return inquirer.prompt([
+    {
+      type: "input",
+      name: "departmentName",
+      message: "What is the department's name?",
+    },
+  ])
+  .then (({departmentName}) => {
+    const newDepartmentdata = { name : departmentName};
+    addDepartment(newDepartmentdata)
   })
 }
 
@@ -193,7 +209,7 @@ const userMenu = async () => {
         getEmployee();
     }
     if (answers.promptAnswer ===  "Add A Department"){
-        addDepartment();
+        addDepartmentEntry();
     }
     if (answers.promptAnswer ===  "Add A Role"){
         addRole();
