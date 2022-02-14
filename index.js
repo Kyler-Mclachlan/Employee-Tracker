@@ -73,7 +73,7 @@ addRoleEntry = async () => {
 }
 
 UpdateRoleEntry = async () => { 
-    const employees = await getEmployee();
+    const employees = await getEmployeeForUpdate();
     console.log(employees);
     return inquirer.prompt([
         {
@@ -97,7 +97,6 @@ UpdateRoleEntry = async () => {
 // DISPLAY SQL queries
 var getEmployee= async () => {
     db.query(
-        // Still need to do manager name
     `SELECT employees.id AS Employee_ID , employees.first_name AS First_Name, employees.last_name AS Last_Name, roles.title as Title, department.name AS Department_name, roles.salary AS Salary, employees.manager_id AS Manager_id
     FROM employees
     JOIN roles ON employees.role_id = roles.id
@@ -112,6 +111,19 @@ var getEmployee= async () => {
         }
     )
     userMenu();
+};
+
+var getEmployeeForUpdate = async () => {
+    db.query(
+    `SELECT employees.first_name AS First_Name, employees.last_name AS Last_Name
+    FROM employees;`,
+        function(err, results, fields) {
+            if (err){
+                console.log(err);
+            }
+            console.table(results);
+        }
+    )
 };
 
 var getDepartment = async () => {
