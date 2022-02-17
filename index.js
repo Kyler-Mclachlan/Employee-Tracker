@@ -73,7 +73,7 @@ addRoleEntry = async () => {
 }
 
 UpdateRoleEntry = async () => { 
-    const employees = await getEmployeeForUpdate();
+    const employees = await getEmployeeForUpdate()
     console.log(employees);
     return inquirer.prompt([
         {
@@ -97,33 +97,36 @@ UpdateRoleEntry = async () => {
 // DISPLAY SQL queries
 var getEmployee= async () => {
     db.query(
-    `SELECT employees.id AS Employee_ID , employees.first_name AS First_Name, employees.last_name AS Last_Name, roles.title as Title, department.name AS Department_name, roles.salary AS Salary, employees.manager_id AS Manager_id
+    `SELECT employees.id AS Employee_ID , employees.first_name AS First_Name, employees.last_name AS Last_Name, roles.title as Title, department.name AS Department_name, roles.salary AS Salary, employees.manager_id AS Manager_Name
     FROM employees
     JOIN roles ON employees.role_id = roles.id
     RIGHT JOIN department ON roles.department_id = department.id
+    LEFT JOIN employees a ON employees.first_name = employees.id 
     ORDER BY employees.id ASC;`,
     
         function(err, results, fields) {
             console.table(results);
+            userMenu();
             if (err){
                 console.log(err);
             }
         }
     )
-    userMenu();
 };
 
+
 var getEmployeeForUpdate = async () => {
-    db.query(
-    `SELECT employees.first_name AS First_Name, employees.last_name AS Last_Name
-    FROM employees;`,
-        function(err, results, fields) {
-            if (err){
-                console.log(err);
-            }
-            console.table(results);
-        }
-    )
+    return new Promise((resolve, reject) =>{
+        db.query(
+        `SELECT employees.first_name AS First_Name, employees.last_name AS Last_Name
+        FROM employees;`, function(err, results) {
+            if(err) reject(err)
+            userMenu();
+            resolve(results);
+        }       
+        )
+        
+    }) 
 };
 
 var getDepartment = async () => {
@@ -133,12 +136,12 @@ var getDepartment = async () => {
         function(err, results, fields) {
             console.table(results);
             console.log('departments');
+            userMenu();
             if (err){
                 console.log(err)
             };
         }
     )
-    userMenu();
 };
 
 var getRoles = async () => {
@@ -148,9 +151,12 @@ var getRoles = async () => {
         JOIN department ON roles.department_id = department.id;`, 
         function(err, results, fields) {
             console.table(results);
+            userMenu();
+            if (err){
+                console.log(err)
+            };
         }
     )
-    userMenu();
 };
 
 
@@ -163,11 +169,11 @@ var addEmployee = async (data) => {
     const params = [data.first_name, data.last_name, data.role_id, data.manager_id];
     db.query(sql, params, (err, results) => {
         console.table(results);
+        userMenu()
         if (err){
             console.log(err);
         }
     },
-    userMenu()
 )};
 
 var addRole = async  (data) => {
@@ -175,11 +181,11 @@ var addRole = async  (data) => {
     const params = [data.title, data.salary, data.department_id];
     db.query(sql, params, (err, results) => {
         console.table(results);
+        userMenu()
         if (err){
             console.log(err);
         }
     },
-    userMenu()
 )};
 
 var addDepartment = async (data) => {
@@ -187,11 +193,11 @@ var addDepartment = async (data) => {
     const params = [data.name];
     db.query(sql, params, (err, results) => {
         console.table(results);
+        userMenu()
         if (err){
             console.log(err);
         }
     },
-    userMenu()
 )};
 
 // Update SQL queries 
@@ -201,11 +207,11 @@ var UpdateEmployee = (data) => {
     const params = [data.role_id, data.first_name];
     db.query(sql, params, (err, results) => {
         console.table(results);
+        userMenu()
         if (err){
             console.log(err);
         }
     },
-    userMenu()
 )};
 
 // TEST functions
