@@ -97,13 +97,11 @@ UpdateRoleEntry = async () => {
 // DISPLAY SQL queries
 var getEmployee= async () => {
     db.query(
-    `SELECT employees.id AS Employee_ID , employees.first_name AS First_Name, employees.last_name AS Last_Name, roles.title as Title, department.name AS Department_name, roles.salary AS Salary, employees.manager_id AS Manager_Name
-    FROM employees
-    JOIN roles ON employees.role_id = roles.id
-    RIGHT JOIN department ON roles.department_id = department.id
-    LEFT JOIN employees a ON employees.first_name = employees.id 
-    ORDER BY employees.id ASC;`,
-    
+    `SELECT employees.id AS ID, employees.first_name AS First_name, employees.last_name as Last_Name, roles.title AS Title, department.name AS department, roles.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+    FROM employees 
+    LEFT JOIN roles on employees.role_id = roles.id 
+    LEFT JOIN department on roles.department_id = department.id 
+    LEFT JOIN employees manager on manager.id = employees.manager_id;`,
         function(err, results, fields) {
             console.table(results);
             userMenu();
